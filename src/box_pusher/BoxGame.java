@@ -8,6 +8,7 @@ public class BoxGame {
     private CanvasWindow canvas;
 
     public BoxGame(){
+        tileArray = new Tile[5][5];
         
     }
 }
