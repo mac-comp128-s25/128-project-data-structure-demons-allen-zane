@@ -1,4 +1,4 @@
-package box_pusher;
+package boxpusher;
 import edu.macalester.graphics.CanvasWindow;
 /**
  * The main class that handles things like managing the tile array, and player movement
