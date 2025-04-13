@@ -20,5 +20,11 @@ public class BoxPusherTest {
         playerTile.interact(testLevel1[playerTile.getIndex1()][playerTile.getIndex2()-1], testLevel1);
         assertEquals("Empty", testLevel1[currentPlayerIndex1][currentPlayerIndex2].getSignifier());
     }
+    @Test 
+    public void findPlayerTest(){
+        Tile [][] testLevel1 = levels.getTestLevel1();
+        Tile playerTile = Levels.getPlayerTile(testLevel1);
+        assertEquals("Player", playerTile.getSignifier());
+    }
 
 }
