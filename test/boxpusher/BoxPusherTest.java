@@ -2,6 +2,9 @@ package boxpusher;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.logging.Level;
+
 import org.junit.jupiter.api.BeforeEach;
 
 public class BoxPusherTest {
@@ -25,6 +28,12 @@ public class BoxPusherTest {
         Tile [][] testLevel1 = levels.getTestLevel1();
         Tile playerTile = Levels.getPlayerTile(testLevel1);
         assertEquals("Player", playerTile.getSignifier());
+    }
+
+    @Test
+    public void testLevelGeneratorWalk(){
+        LevelGenerator levelGenerator = new LevelGenerator();
+        levelGenerator.generate();
     }
 
 }

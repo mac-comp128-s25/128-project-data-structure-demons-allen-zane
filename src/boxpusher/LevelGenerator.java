@@ -1,5 +1,7 @@
 package boxpusher;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class LevelGenerator {
@@ -9,8 +11,12 @@ public class LevelGenerator {
     private final int minWalkDistance = 1; //the min. distance for a walk to be for it to be considered valid
 
     private Tile[][] level = new Tile[levelSize][levelSize];
+
+    private List<Integer> notAllowedDir;
     
-    public void generate(){
+    public Tile[][] generate(){
+        notAllowedDir = new LinkedList<Integer>(); //setup notAllowedDir
+
         //init 2D array with empty tiles
         for (int i = 0; i < levelSize; i++) {
             for (int j = 0; j < levelSize; j++) {
@@ -20,9 +26,8 @@ public class LevelGenerator {
 
         //init player
         final int[] playerPos = {getRandomNumberInRange(0, levelSize), getRandomNumberInRange(0, levelSize)};
-        level[playerPos[0]][playerPos[1]] = new PlayerTile(playerPos[0], playerPos[1]);
 
-        //init box
+        //init box TODO: NOT WOKRING IS SAME AS PLAYER
         int[] boxPos = {playerPos[0], playerPos[1]};
         while(boxPos == playerPos){
             //set new boxPos
@@ -37,12 +42,29 @@ public class LevelGenerator {
             if(boxPos[1] > 9 || boxPos[1] < 0){
                 boxPos[1] = playerPos[1];
             }
+            //make sure not in player
+            if(boxPos[0] == playerPos[0] && boxPos[1] == playerPos[1]){
+                boxPos[1] = playerPos[1];
+            }
         }
-        //level[boxPos[0]][boxPos[1]] = new BoxTile(boxPos[0], boxPos[1]); TODO: update box tile
 
         boolean[][] walk = genWalk(playerPos, boxPos);
         
-        //TODO: actually generate the level off of our valid walk
+
+        for (int i = 0; i < walk.length; i++) {
+            for (int j = 0; j < walk.length; j++) {
+                if(walk[i][j] == true){
+                    level[i][j] = new EmptyTile(i, j);
+                } else {
+                    //level[i][j] = new WallTile(i, j); TODO: uncomment once we have a wall tile
+                }
+            }
+        }
+
+        level[playerPos[0]][playerPos[1]] = new PlayerTile(playerPos[0], playerPos[1]);
+        level[boxPos[0]][boxPos[1]] = new BoxTile(boxPos[0], boxPos[1]);
+
+        return level;
     }
 
     //recursive method that generates a valid walk
@@ -55,6 +77,8 @@ public class LevelGenerator {
         int[] boxPos = {bPos[0], bPos[1]};
 
         for (int i = 0; i < walkCount; i++) {
+            walk[playerPos[0]][playerPos[1]] = true;
+            walk[boxPos[0]][boxPos[1]] = true;
             move(playerPos, boxPos);
         }
 
@@ -66,64 +90,73 @@ public class LevelGenerator {
         }
 
         //if not call genWalk again
+        //System.out.println("WALK FAILED");
         return genWalk(pPos, bPos);
     }
 
     //moves the player randomly and makes sure it is valid -> updates positions, if not -> nothing changes
     private void move(int[] pPos, int[] bPos){ 
-        int[] newPos = pPos;
 
-        //increment new Pos
-        int dir = getRandomNumberInRange(0, 4); //0 = left, 1 = right, 2 = up, 3 = down;
+        System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
+
+        //player cannot move out of horizontal bounds
+        if(pPos[0] == 9){
+            notAllowedDir.add(1);
+        } else if(pPos[0] == 0){
+            notAllowedDir.add(0);
+        }
+
+        //player cannot move out of vertical bounds
+        if(pPos[1] == 9){
+            notAllowedDir.add(3);
+        } else if(pPos[1] == 0){
+            notAllowedDir.add(2);
+        }
+
+        //make sure moving into a box is valid
+        if(pPos[1] == bPos[1]){ //x
+            if(bPos[0] == 9 && pPos[0] == 8){
+                notAllowedDir.add(1);
+            } else if(bPos[0] == 0 && pPos[0] == 1){
+                notAllowedDir.add(0);
+            }
+
+        } else if(pPos[0] == bPos[0]){ //y
+            if(bPos[1] == 9 && pPos[1] == 8){
+                notAllowedDir.add(3);
+            } else if(bPos[1] == 0 && pPos[1] == 1){
+                notAllowedDir.add(2);
+            }
+        }
+
+        //move player
+        int dir = getRandomNewDirection(); //returns one of: 0 = left, 1 = right, 2 = up, 3 = down;
         if(dir == 0){
-            newPos[0] -= 1;
+            pPos[0] -= 1;
+            notAllowedDir.add(1);
         } else if(dir == 1){
-            newPos[0] += 1;
+            pPos[0] += 1;
+            notAllowedDir.add(0);
         } else if(dir == 2){
-            newPos[1] -= 1;
+            pPos[1] -= 1;
+            notAllowedDir.add(3);
         } else{
-            newPos[1] += 1;
-        }
-
-        //make sure newPosX is valid
-        if(newPos[0] > 9 || newPos[0] < 0){
-            newPos[0] = pPos[0];
-        }
-
-        //make sure boxPosY is valid
-        if(newPos[1] > 9 || newPos[1] < 0){
-            newPos[1] = pPos[1];
-        }
-
-        //if we move into a box check it is valid
-        int[] newBoxPos = newPos;
-        if(newPos == bPos){
+            pPos[1] += 1;
+            notAllowedDir.add(2);
+        }    
+        
+        //move box if needed
+        if(pPos == bPos){
             if(dir == 0){
-                newBoxPos[0] -= 1;
+                bPos[0] -= 1;
             } else if(dir == 1){
-                newBoxPos[0] += 1;
+                bPos[0] += 1;
             } else if(dir == 2){
-                newBoxPos[1] -= 1;
+                bPos[1] -= 1;
             } else{
-                newBoxPos[1] += 1;
-            }
-
-            //make sure newPosX is valid
-            if(newBoxPos[0] > 9 || newBoxPos[0] < 0){
-                newPos[0] = pPos[0];
-                newBoxPos[0] = bPos[0];
-            }
-
-            //make sure boxPosY is valid
-            if(newBoxPos[1] > 9 || newBoxPos[1] < 0){
-                newPos[1] = pPos[1];
-                newBoxPos[1] = bPos[1];
+                bPos[1] += 1;
             }
         }
-
-        //update to our new positions
-        pPos = newPos;
-        bPos = newBoxPos;
     }
 
     //min is inclusive, max is not, for example gRNIR(3,12) can return 3 but not 12
@@ -135,5 +168,17 @@ public class LevelGenerator {
 
     public Tile[][] getLevel(){
         return level;
+    }
+
+    //same as getRandomNumberInRange but you cant move backwards
+    private int getRandomNewDirection(){
+        List<Integer> possibleDir = new LinkedList<>();
+        for (int i = 0; i < 4; i++) {
+            possibleDir.add(i);
+        }
+
+        possibleDir.removeAll(notAllowedDir);
+        notAllowedDir.clear();
+        return possibleDir.get(getRandomNumberInRange(0, possibleDir.size()));
     }
 }
