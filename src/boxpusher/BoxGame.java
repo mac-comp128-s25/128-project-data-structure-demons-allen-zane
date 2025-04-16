@@ -11,7 +11,7 @@ public class BoxGame {
 
     public BoxGame(){
         levels = new Levels();
-        tileArray = levels.getTestLevel1();
+        tileArray = levels.getTestLevel2();
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
 
@@ -24,9 +24,7 @@ public class BoxGame {
     public static void main(String[] args) {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
-        
-      
-        
+
         boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
     }
 
