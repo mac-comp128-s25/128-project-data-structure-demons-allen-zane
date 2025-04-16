@@ -25,7 +25,7 @@ public class BoxGame {
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
 
         Tile playerTile = Levels.getPlayerTile(boxGame.getTileArray());
-        playerTile.interact(playerTile, null);
+        
     }
 
 }
