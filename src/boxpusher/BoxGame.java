@@ -7,20 +7,22 @@ import edu.macalester.graphics.events.Key;
 public class BoxGame {
     private Tile[][] tileArray;
     private CanvasWindow canvas;
-    private Levels levels;
+    private LevelGenerator levelGenerator;
 
     public BoxGame(){
-        levels = new Levels();
-        tileArray = levels.getTestLevel2();
+        levelGenerator = new LevelGenerator();
+        tileArray = levelGenerator.generate();
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
 
     public Tile[][] getTileArray(){
         return this.tileArray;
     }
+
     public CanvasWindow getCanvas(){
         return canvas;
     }
+
     public static void main(String[] args) {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());

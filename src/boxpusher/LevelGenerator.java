@@ -59,7 +59,7 @@ public class LevelGenerator {
                 if(walk[i][j] == true){
                     level[i][j] = new EmptyTile(i, j);
                 } else {
-                    //level[i][j] = new WallTile(i, j); TODO: uncomment once we have a wall tile
+                    level[i][j] = new WallTile(i, j);
                 }
             }
         }
