@@ -27,30 +27,33 @@ public class LevelGenerator {
         //init player
         final int[] playerPos = {getRandomNumberInRange(0, levelSize), getRandomNumberInRange(0, levelSize)};
 
-        //init box TODO: NOT WOKRING IS SAME AS PLAYER
-        int[] boxPos = {playerPos[0], playerPos[1]};
-        while(boxPos == playerPos){
-            //set new boxPos
-            boxPos[0] += getRandomNumberInRange(-1, 2);
-            boxPos[1] += getRandomNumberInRange(-1, 2);
-
-            //make sure boxPosX is valid
-            if(boxPos[0] > 9 || boxPos[0] < 0){
-                boxPos[0] = playerPos[0];
+        //put the box adjacent to the player (not out of bounds tho)
+        int[] tempBoxPos = {playerPos[0], playerPos[1]};
+        if (getRandomNumberInRange(0,2) == 0){
+            if (tempBoxPos[0] == 9){
+                tempBoxPos[0] = 8;
+            } else if (tempBoxPos[0] == 0){
+                tempBoxPos[0] = 1;
+            } else if (getRandomNumberInRange(0,2) == 0){
+                tempBoxPos[0] += 1;
+            } else {
+                tempBoxPos[0] -= 1;
             }
-            //make sure boxPosY is valid
-            if(boxPos[1] > 9 || boxPos[1] < 0){
-                boxPos[1] = playerPos[1];
-            }
-            //make sure not in player
-            if(boxPos[0] == playerPos[0] && boxPos[1] == playerPos[1]){
-                boxPos[1] = playerPos[1];
+        } else {
+            if (tempBoxPos[1] == 9){
+                tempBoxPos[1] = 8;
+            } else if (tempBoxPos[1] == 0){
+                tempBoxPos[1] = 1;
+            } else if (getRandomNumberInRange(0,2) == 0){
+                tempBoxPos[1] += 1;
+            } else {
+                tempBoxPos[1] -= 1;
             }
         }
-
+        final int[] boxPos = {tempBoxPos[0], tempBoxPos[1]};
+        
         boolean[][] walk = genWalk(playerPos, boxPos);
         
-
         for (int i = 0; i < walk.length; i++) {
             for (int j = 0; j < walk.length; j++) {
                 if(walk[i][j] == true){
@@ -97,7 +100,7 @@ public class LevelGenerator {
     //moves the player randomly and makes sure it is valid -> updates positions, if not -> nothing changes
     private void move(int[] pPos, int[] bPos){ 
 
-        System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
+        //System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
 
         //player cannot move out of horizontal bounds
         if(pPos[0] == 9){
@@ -146,7 +149,7 @@ public class LevelGenerator {
         }    
         
         //move box if needed
-        if(pPos == bPos){
+        if(pPos[0] == bPos[0] && pPos[1] == bPos[1]){
             if(dir == 0){
                 bPos[0] -= 1;
             } else if(dir == 1){
