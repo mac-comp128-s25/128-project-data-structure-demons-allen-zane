@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class LevelGenerator {
 
-    private final int levelSize = 10;
-    private final int walkCount = 10;
-    private final int minWalkDistance = 1; //the min. distance for a walk to be for it to be considered valid
+    private final int levelSize = 7;
+    private final int walkCount = 20;
+    private final int minWalkDistance = 3; //the min. distance for a walk to be for it to be considered valid
 
     private Tile[][] level = new Tile[levelSize][levelSize];
 
@@ -30,8 +30,8 @@ public class LevelGenerator {
         //put the box adjacent to the player (not out of bounds tho)
         int[] tempBoxPos = {playerPos[0], playerPos[1]};
         if (getRandomNumberInRange(0,2) == 0){
-            if (tempBoxPos[0] == 9){
-                tempBoxPos[0] = 8;
+            if (tempBoxPos[0] == levelSize - 1){
+                tempBoxPos[0] = levelSize - 2;
             } else if (tempBoxPos[0] == 0){
                 tempBoxPos[0] = 1;
             } else if (getRandomNumberInRange(0,2) == 0){
@@ -40,8 +40,8 @@ public class LevelGenerator {
                 tempBoxPos[0] -= 1;
             }
         } else {
-            if (tempBoxPos[1] == 9){
-                tempBoxPos[1] = 8;
+            if (tempBoxPos[1] == levelSize - 1){
+                tempBoxPos[1] = levelSize - 2;
             } else if (tempBoxPos[1] == 0){
                 tempBoxPos[1] = 1;
             } else if (getRandomNumberInRange(0,2) == 0){
@@ -73,7 +73,7 @@ public class LevelGenerator {
     //recursive method that generates a valid walk
     private boolean[][] genWalk(int[] pPos, int[] bPos){
 
-        boolean[][] walk = new boolean[10][10]; //stores the walk if value is true then has been walked on
+        boolean[][] walk = new boolean[levelSize][levelSize]; //stores the walk if value is true then has been walked on
 
         //create new playerPos and boxPos
         int[] playerPos = {pPos[0], pPos[1]};
@@ -103,14 +103,14 @@ public class LevelGenerator {
         //System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
 
         //player cannot move out of horizontal bounds
-        if(pPos[0] == 9){
+        if(pPos[0] == levelSize - 1){
             notAllowedDir.add(1);
         } else if(pPos[0] == 0){
             notAllowedDir.add(0);
         }
 
         //player cannot move out of vertical bounds
-        if(pPos[1] == 9){
+        if(pPos[1] == levelSize - 1){
             notAllowedDir.add(3);
         } else if(pPos[1] == 0){
             notAllowedDir.add(2);
@@ -118,14 +118,14 @@ public class LevelGenerator {
 
         //make sure moving into a box is valid
         if(pPos[1] == bPos[1]){ //x
-            if(bPos[0] == 9 && pPos[0] == 8){
+            if(bPos[0] == levelSize - 1 && pPos[0] == levelSize - 2){
                 notAllowedDir.add(1);
             } else if(bPos[0] == 0 && pPos[0] == 1){
                 notAllowedDir.add(0);
             }
 
         } else if(pPos[0] == bPos[0]){ //y
-            if(bPos[1] == 9 && pPos[1] == 8){
+            if(bPos[1] == levelSize - 1 && pPos[1] == levelSize - 2){
                 notAllowedDir.add(3);
             } else if(bPos[1] == 0 && pPos[1] == 1){
                 notAllowedDir.add(2);
