@@ -1,5 +1,6 @@
 package boxpusher;
 import edu.macalester.graphics.CanvasWindow;
+import edu.macalester.graphics.events.Key;
 /**
  * The main class that handles things like managing the tile array, and player movement
  */
@@ -10,7 +11,7 @@ public class BoxGame {
 
     public BoxGame(){
         levels = new Levels();
-        tileArray = levels.getTestLevel1();
+        tileArray = levels.getTestLevel2();
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
 
@@ -24,10 +25,28 @@ public class BoxGame {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
 
-        Tile playerTile = Levels.getPlayerTile(boxGame.getTileArray());
-        playerTile.interact(playerTile, null);
+        boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
+    }
 
-        
+    private void move(Key key) {
+        Tile playerTile = Levels.getPlayerTile(tileArray);
+        if (key.equals(Key.valueOf("DOWN_ARROW")) &&  playerTile.getIndex1()+1 <  tileArray.length){
+            Tile interactTile = tileArray[playerTile.getIndex1()+1][playerTile.getIndex2()];
+            playerTile.interact(interactTile, tileArray);
+        }
+        if (key.equals(Key.valueOf("LEFT_ARROW")) &&  playerTile.getIndex2()-1 >= 0){
+            Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()-1];
+            playerTile.interact(interactTile, tileArray);
+        }
+        if (key.equals(Key.valueOf("UP_ARROW")) &&  playerTile.getIndex1()-1 >=0){
+            Tile interactTile = tileArray[playerTile.getIndex1()-1][playerTile.getIndex2()];
+            playerTile.interact(interactTile, tileArray);
+        }
+        if (key.equals(Key.valueOf("RIGHT_ARROW")) &&  playerTile.getIndex2()+1 < tileArray[0].length){
+            Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()+1];
+            playerTile.interact(interactTile, tileArray);
+        }
+        TileGraphics.showTiles(tileArray, canvas);
     }
 
 }
