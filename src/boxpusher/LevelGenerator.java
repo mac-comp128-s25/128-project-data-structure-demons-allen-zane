@@ -6,16 +6,20 @@ import java.util.Random;
 
 public class LevelGenerator {
 
-    private final int levelSize = 7;
-    private final int walkCount = 20;
-    private final int minWalkDistance = 3; //the min. distance for a walk to be for it to be considered valid
+    private int levelSize;
+    private int walkCount;
+    private int minWalkDistance; //the min. distance for a walk to be for it to be considered valid
 
     private Tile[][] level = new Tile[levelSize][levelSize];
 
     private List<Integer> notAllowedDir;
     
-    public Tile[][] generate(){
+    public Tile[][] generate(int levelSize, int walkCount, int minWalkDistance){
         notAllowedDir = new LinkedList<Integer>(); //setup notAllowedDir
+
+        this.levelSize = levelSize;
+        this.walkCount = walkCount;
+        this.minWalkDistance = minWalkDistance;
 
         //init 2D array with empty tiles
         for (int i = 0; i < levelSize; i++) {

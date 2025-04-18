@@ -9,9 +9,14 @@ public class BoxGame {
     private CanvasWindow canvas;
     private LevelGenerator levelGenerator;
 
+    //for level gen
+    private int levelSize = 10;
+    private int walkCount = 10;
+    private int minWalkDistance = 1;
+
     public BoxGame(){
         levelGenerator = new LevelGenerator();
-        tileArray = levelGenerator.generate();
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
 
