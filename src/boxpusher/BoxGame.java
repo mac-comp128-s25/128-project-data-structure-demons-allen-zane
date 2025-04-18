@@ -53,6 +53,7 @@ public class BoxGame {
             Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()+1];
             playerTile.interact(interactTile, tileArray);
         }
+
         TileGraphics.showTiles(tileArray, canvas);
     }
 
