@@ -10,16 +10,18 @@ public class LevelGenerator {
     private int walkCount;
     private int minWalkDistance; //the min. distance for a walk to be for it to be considered valid
 
-    private Tile[][] level = new Tile[levelSize][levelSize];
+    private Tile[][] level;
 
     private List<Integer> notAllowedDir;
     
-    public Tile[][] generate(int levelSize, int walkCount, int minWalkDistance){
+    public Tile[][] generate(int lvlSize, int wCount, int mWDistance){
         notAllowedDir = new LinkedList<Integer>(); //setup notAllowedDir
 
-        this.levelSize = levelSize;
-        this.walkCount = walkCount;
-        this.minWalkDistance = minWalkDistance;
+        this.levelSize = lvlSize;
+        this.walkCount = wCount;
+        this.minWalkDistance = mWDistance;
+
+        level = new Tile[levelSize][levelSize];
 
         //init 2D array with empty tiles
         for (int i = 0; i < levelSize; i++) {

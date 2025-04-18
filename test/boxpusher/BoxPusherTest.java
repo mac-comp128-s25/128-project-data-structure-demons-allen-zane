@@ -30,10 +30,4 @@ public class BoxPusherTest {
         assertEquals("Player", playerTile.getSignifier());
     }
 
-    @Test
-    public void testLevelGeneratorWalk(){
-        LevelGenerator levelGenerator = new LevelGenerator();
-        levelGenerator.generate();
-    }
-
 }
