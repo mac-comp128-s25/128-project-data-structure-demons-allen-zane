@@ -28,7 +28,7 @@ public class TileGraphics {
             }
             currentX = canvas.getWidth()/5;
             for (int j = 0; j < tileArray[i].length; j++){
-                Tile currentTile = tileArray[i][j];
+                Tile currentTile = tileArray[j][i];
                 Rectangle currentRectangle = new Rectangle(currentX, currentY, TILE_SIZE, TILE_SIZE);
                 currentRectangle.setFillColor(currentTile.getColor());
                 canvas.add(currentRectangle);

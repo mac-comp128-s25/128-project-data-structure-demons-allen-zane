@@ -8,6 +8,7 @@ public class BoxGame {
     private Tile[][] tileArray;
     private CanvasWindow canvas;
     private LevelGenerator levelGenerator;
+    private Levels testLevels;
 
     //for level gen
     private int levelSize = 10;
@@ -16,7 +17,9 @@ public class BoxGame {
 
     public BoxGame(){
         levelGenerator = new LevelGenerator();
-        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
+        testLevels = new Levels();
+        //tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
+        tileArray = testLevels.getTestLevel2();
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
 
@@ -37,20 +40,23 @@ public class BoxGame {
 
     private void move(Key key) {
         Tile playerTile = Levels.getPlayerTile(tileArray);
-        if (key.equals(Key.valueOf("DOWN_ARROW")) &&  playerTile.getIndex1()+1 <  tileArray.length){
-            Tile interactTile = tileArray[playerTile.getIndex1()+1][playerTile.getIndex2()];
+
+        System.out.println(playerTile.getIndex1() + " " + playerTile.getIndex2());
+
+        if (key.equals(Key.valueOf("DOWN_ARROW")) &&  playerTile.getIndex2()+1 <  tileArray.length){
+            Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()+1];
             playerTile.interact(interactTile, tileArray);
         }
-        if (key.equals(Key.valueOf("LEFT_ARROW")) &&  playerTile.getIndex2()-1 >= 0){
-            Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()-1];
-            playerTile.interact(interactTile, tileArray);
-        }
-        if (key.equals(Key.valueOf("UP_ARROW")) &&  playerTile.getIndex1()-1 >=0){
+        if (key.equals(Key.valueOf("LEFT_ARROW")) &&  playerTile.getIndex1()-1 >= 0){
             Tile interactTile = tileArray[playerTile.getIndex1()-1][playerTile.getIndex2()];
             playerTile.interact(interactTile, tileArray);
         }
-        if (key.equals(Key.valueOf("RIGHT_ARROW")) &&  playerTile.getIndex2()+1 < tileArray[0].length){
-            Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()+1];
+        if (key.equals(Key.valueOf("UP_ARROW")) &&  playerTile.getIndex2()-1 >=0){
+            Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()-1];
+            playerTile.interact(interactTile, tileArray);
+        }
+        if (key.equals(Key.valueOf("RIGHT_ARROW")) &&  playerTile.getIndex1()+1 < tileArray[0].length){
+            Tile interactTile = tileArray[playerTile.getIndex1()+1][playerTile.getIndex2()];
             playerTile.interact(interactTile, tileArray);
         }
 

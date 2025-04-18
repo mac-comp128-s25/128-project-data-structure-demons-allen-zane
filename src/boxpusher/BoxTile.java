@@ -28,20 +28,20 @@ public class BoxTile implements Tile{
         int indexDist1 = index1-playerTile.getIndex1();
         int indexDist2 = index2-playerTile.getIndex2();
         if(otherTile.getSignifier().equals("Player")){
-            if ((indexDist1 == index1+1) &&  index1+1 < tileArray.length){
-                Tile interactTile = tileArray[index1+1][index2];
-                interactTile.interact(this, tileArray);
-            }
             if ((indexDist2 == index2+1) &&  index2+1 < tileArray.length){
                 Tile interactTile = tileArray[index1][index2+1];
                 interactTile.interact(this, tileArray);
             }
-            if ((indexDist2 == index2-1) &&  index2-1 >= 1){
-                Tile interactTile = tileArray[index1][index2+1];
+            if ((indexDist1 == index1+1) &&  index1+1 < tileArray.length){
+                Tile interactTile = tileArray[index1+1][index2];
                 interactTile.interact(this, tileArray);
             }
-            if ((indexDist1 == index1-1) &&  index1-1 >=1){
-                Tile interactTile = tileArray[index1-1][index2];
+            if ((indexDist1 == index1-1) &&  index1-1 >= 1){
+                Tile interactTile = tileArray[index1+1][index2];
+                interactTile.interact(this, tileArray);
+            }
+            if ((indexDist2 == index2-1) &&  index2-1 >=1){
+                Tile interactTile = tileArray[index1][index2-1];
                 interactTile.interact(this, tileArray);
             }
         }
