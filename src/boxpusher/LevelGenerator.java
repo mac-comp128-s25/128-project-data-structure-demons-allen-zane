@@ -92,10 +92,8 @@ public class LevelGenerator {
         }
 
         //check that walk traveled more than minWalkDistance (x and y) -> return our walk
-        if(Math.abs(playerPos[0] - pPos[0]) > minWalkDistance){
-            if(Math.abs(playerPos[1] - pPos[1]) > minWalkDistance){
-                return walk;
-            }
+        if((Math.abs(playerPos[0] - pPos[0]) + (Math.abs(playerPos[1] - pPos[1]))) > minWalkDistance){
+            return walk;
         }
 
         //if not call genWalk again

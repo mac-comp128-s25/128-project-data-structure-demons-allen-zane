@@ -56,6 +56,7 @@ public class BetterLevelGenerator {
                 tempBoxPos[1] -= 1;
             }
         }
+
         final int[] boxPos = {tempBoxPos[0], tempBoxPos[1]};
         
         boolean[][] walk = genWalk(playerPos, boxPos);
@@ -92,10 +93,8 @@ public class BetterLevelGenerator {
         }
 
         //check that walk traveled more than minWalkDistance (x and y) -> return our walk
-        if(Math.abs(playerPos[0] - pPos[0]) > minWalkDistance){
-            if(Math.abs(playerPos[1] - pPos[1]) > minWalkDistance){
-                return walk;
-            }
+        if((Math.abs(playerPos[0] - pPos[0]) + (Math.abs(playerPos[1] - pPos[1]))) > minWalkDistance){
+            return walk;
         }
 
         //if not call genWalk again
@@ -103,69 +102,65 @@ public class BetterLevelGenerator {
         return genWalk(pPos, bPos);
     }
 
-    //moves the player randomly and makes sure it is valid -> updates positions, if not -> nothing changes
+    //moves the box randomly, then updates
     private void move(int[] pPos, int[] bPos){ 
 
         //System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
 
-        //player cannot move out of horizontal bounds
-        if(pPos[0] == levelSize - 1){
+        //box cannot move out of horizontal bounds + gets stuck on vertical edge
+        if(bPos[0] == levelSize - 1 || bPos[0] == 0){
             notAllowedDir.add(1);
-        } else if(pPos[0] == 0){
             notAllowedDir.add(0);
         }
 
-        //player cannot move out of vertical bounds
-        if(pPos[1] == levelSize - 1){
+        //box cannot move out of vertical bounds + gets stuck on horizontal edge
+        if(bPos[1] == levelSize - 1 || bPos[1] == 0){
             notAllowedDir.add(3);
-        } else if(pPos[1] == 0){
             notAllowedDir.add(2);
         }
 
-        //make sure moving into a box is valid
+        //make sure moving not moving into player
         if(pPos[1] == bPos[1]){ //x
-            if(bPos[0] == levelSize - 1 && pPos[0] == levelSize - 2){
+            if(bPos[0] == pPos[0] + 1){
                 notAllowedDir.add(1);
-            } else if(bPos[0] == 0 && pPos[0] == 1){
+            } else if(bPos[0] == pPos[0] - 1){
                 notAllowedDir.add(0);
             }
 
         } else if(pPos[0] == bPos[0]){ //y
-            if(bPos[1] == levelSize - 1 && pPos[1] == levelSize - 2){
+            if(bPos[1] == pPos[1] + 1){
                 notAllowedDir.add(3);
-            } else if(bPos[1] == 0 && pPos[1] == 1){
+            } else if(bPos[1] == pPos[1] - 1){
                 notAllowedDir.add(2);
             }
         }
 
-        //move player
+        int[] bPosOld = {bPos[0], bPos[1]}; //store old box pos
+        int[] pPosReq = {bPos[0], bPos[1]}; //where the player would have been to push the box
+
+        //move box
         int dir = getRandomNewDirection(); //returns one of: 0 = left, 1 = right, 2 = up, 3 = down;
         if(dir == 0){
-            pPos[0] -= 1;
+            pPosReq[0] += 1;
+            bPos[0] -= 1;
             notAllowedDir.add(1);
         } else if(dir == 1){
-            pPos[0] += 1;
+            pPosReq[0] -= 1;
+            bPos[0] += 1;
             notAllowedDir.add(0);
         } else if(dir == 2){
-            pPos[1] -= 1;
+            pPosReq[1] += 1;
+            bPos[1] -= 1;
             notAllowedDir.add(3);
         } else{
-            pPos[1] += 1;
+            pPosReq[1] -= 1;
+            bPos[1] += 1;
             notAllowedDir.add(2);
         }    
         
-        //move box if needed
-        if(pPos[0] == bPos[0] && pPos[1] == bPos[1]){
-            if(dir == 0){
-                bPos[0] -= 1;
-            } else if(dir == 1){
-                bPos[0] += 1;
-            } else if(dir == 2){
-                bPos[1] -= 1;
-            } else{
-                bPos[1] += 1;
-            }
-        }
+        //TODO: create new walk between players position and new position
+        //from pPosReq to pPos without going through bPosOld
+
     }
 
     //min is inclusive, max is not, for example gRNIR(3,12) can return 3 but not 12
