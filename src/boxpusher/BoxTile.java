@@ -25,24 +25,42 @@ public class BoxTile implements Tile{
     @Override
     public void interact(Tile otherTile, Tile[][] tileArray) {
         Tile playerTile = Levels.getPlayerTile(tileArray);
-        int indexDist1 = index1-playerTile.getIndex1();
-        int indexDist2 = index2-playerTile.getIndex2();
+        int indexDist1 = playerTile.getIndex1()-index1;
+        int playerIndex1 = playerTile.getIndex1();
+        int playerIndex2 = playerTile.getIndex2();
+        int indexDist2 = playerTile.getIndex2()-index2;
         if(otherTile.getSignifier().equals("Player")){
-            if ((indexDist2 == index2+1) &&  index2+1 < tileArray.length){
-                Tile interactTile = tileArray[index1][index2+1];
-                interactTile.interact(this, tileArray);
+            //move down
+            if (index2-1 >= 0){
+                if ((tileArray[index1][index2-1] == playerTile) && index2+1 < tileArray[index1].length){
+                    Tile interactTile = tileArray[index1][index2+1];
+                    interactTile.interact(this, tileArray);
+                    interactTile.interact(playerTile, tileArray);
+                }
             }
-            if ((indexDist1 == index1+1) &&  index1+1 < tileArray.length){
-                Tile interactTile = tileArray[index1+1][index2];
-                interactTile.interact(this, tileArray);
+            //move right
+            if (index1-1 >= 0){
+                if ((tileArray[index1-1][index2] == playerTile) && index1+1 < tileArray.length){
+                    Tile interactTile = tileArray[index1+1][index2];
+                    interactTile.interact(this, tileArray);
+                    interactTile.interact(playerTile, tileArray);
+                }
             }
-            if ((indexDist1 == index1-1) &&  index1-1 >= 1){
-                Tile interactTile = tileArray[index1+1][index2];
-                interactTile.interact(this, tileArray);
+            //move left
+            if (index1+1 < tileArray.length){
+                if ((tileArray[index1+1][index2] == playerTile) && index1-1 >=0){
+                    Tile interactTile = tileArray[index1-1][index2];
+                    interactTile.interact(this, tileArray);
+                    interactTile.interact(playerTile, tileArray);
+                }
             }
-            if ((indexDist2 == index2-1) &&  index2-1 >=1){
-                Tile interactTile = tileArray[index1][index2-1];
-                interactTile.interact(this, tileArray);
+            //move up
+            if (index2+1 < tileArray[index1].length){
+                if ((tileArray[index1][index2+1] == playerTile) && index2-1 >=0){
+                    Tile interactTile = tileArray[index1][index2-1];
+                    interactTile.interact(this, tileArray);
+                    interactTile.interact(playerTile, tileArray);
+                }
             }
         }
     }

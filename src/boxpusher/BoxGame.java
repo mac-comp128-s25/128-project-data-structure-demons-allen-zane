@@ -41,7 +41,7 @@ public class BoxGame {
     private void move(Key key) {
         Tile playerTile = Levels.getPlayerTile(tileArray);
 
-        System.out.println(playerTile.getIndex1() + " " + playerTile.getIndex2());
+      
 
         if (key.equals(Key.valueOf("DOWN_ARROW")) &&  playerTile.getIndex2()+1 <  tileArray.length){
             Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()+1];
