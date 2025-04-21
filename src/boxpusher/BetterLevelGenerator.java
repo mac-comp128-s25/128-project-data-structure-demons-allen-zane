@@ -89,7 +89,7 @@ public class BetterLevelGenerator {
         for (int i = 0; i < walkCount; i++) {
             walk[playerPos[0]][playerPos[1]] = true;
             walk[boxPos[0]][boxPos[1]] = true;
-            move(playerPos, boxPos);
+            move(playerPos, boxPos, walk);
         }
 
         //check that walk traveled more than minWalkDistance (x and y) -> return our walk
@@ -98,14 +98,14 @@ public class BetterLevelGenerator {
         }
 
         //if not call genWalk again
-        //System.out.println("WALK FAILED");
+        System.out.println("WALK FAILED");
         return genWalk(pPos, bPos);
     }
 
     //moves the box randomly, then updates
-    private void move(int[] pPos, int[] bPos){ 
+    private void move(int[] pPos, int[] bPos, boolean[][] walk){ 
 
-        //System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
+        System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
 
         //box cannot move out of horizontal bounds + gets stuck on vertical edge
         if(bPos[0] == levelSize - 1 || bPos[0] == 0){
@@ -122,16 +122,16 @@ public class BetterLevelGenerator {
         //make sure moving not moving into player
         if(pPos[1] == bPos[1]){ //x
             if(bPos[0] == pPos[0] + 1){
-                notAllowedDir.add(1);
-            } else if(bPos[0] == pPos[0] - 1){
                 notAllowedDir.add(0);
+            } else if(bPos[0] == pPos[0] - 1){
+                notAllowedDir.add(1);
             }
 
         } else if(pPos[0] == bPos[0]){ //y
             if(bPos[1] == pPos[1] + 1){
-                notAllowedDir.add(3);
-            } else if(bPos[1] == pPos[1] - 1){
                 notAllowedDir.add(2);
+            } else if(bPos[1] == pPos[1] - 1){
+                notAllowedDir.add(3);
             }
         }
 
@@ -139,27 +139,51 @@ public class BetterLevelGenerator {
         int[] pPosReq = {bPos[0], bPos[1]}; //where the player would have been to push the box
 
         //move box
-        int dir = getRandomNewDirection(); //returns one of: 0 = left, 1 = right, 2 = up, 3 = down;
-        if(dir == 0){
+        int dir = getRandomNewDirection(); //returns one of: 0 = left, 1 = right, 2 = up, 3 = down; 4 = no possible dir
+        if(dir == 4){
+            //cannot move
+        } else if(dir == 0){
             pPosReq[0] += 1;
             bPos[0] -= 1;
-            notAllowedDir.add(1);
         } else if(dir == 1){
             pPosReq[0] -= 1;
             bPos[0] += 1;
-            notAllowedDir.add(0);
         } else if(dir == 2){
             pPosReq[1] += 1;
             bPos[1] -= 1;
-            notAllowedDir.add(3);
         } else{
             pPosReq[1] -= 1;
             bPos[1] += 1;
-            notAllowedDir.add(2);
         }    
         
         //TODO: create new walk between players position and new position
         //from pPosReq to pPos without going through bPosOld
+
+        walk[pPosReq[0]][pPosReq[1]] = true;
+
+        if(dir == 0 || dir == 1){ //if box moved left or right
+            if(pPosReq[0] > pPos[0]){
+                pPos[0]++;
+            } else{
+                pPos[0]--;
+            }
+
+            walk[pPos[0]][pPos[1]] = true;
+
+        } else if(dir == 2 || dir == 3){ //if box moved up or down
+            if(pPosReq[1] > pPos[1]){
+                pPos[0]++;
+            } else{
+                pPos[0]--;
+            }
+
+            walk[pPos[0]][pPos[1]] = true;
+        }
+
+
+        //update player pos
+        pPos[0] = bPosOld[0];
+        pPos[1] = bPosOld[1];
 
     }
 
@@ -176,6 +200,8 @@ public class BetterLevelGenerator {
 
     //same as getRandomNumberInRange but you cant move backwards
     private int getRandomNewDirection(){
+        System.out.println(notAllowedDir);
+
         List<Integer> possibleDir = new LinkedList<>();
         for (int i = 0; i < 4; i++) {
             possibleDir.add(i);
@@ -183,6 +209,11 @@ public class BetterLevelGenerator {
 
         possibleDir.removeAll(notAllowedDir);
         notAllowedDir.clear();
+
+        if(possibleDir.size() == 0){
+            return 4;
+        }
+
         return possibleDir.get(getRandomNumberInRange(0, possibleDir.size()));
     }
 }
