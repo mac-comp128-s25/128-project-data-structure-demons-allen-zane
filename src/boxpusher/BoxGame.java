@@ -8,7 +8,7 @@ public class BoxGame {
     private Tile[][] tileArray;
     private CanvasWindow canvas;
     private LevelGenerator levelGenerator;
-    private Levels testLevels;
+    private TestLevels testLevels;
 
     //for level gen
     private int levelSize = 10;
@@ -17,12 +17,11 @@ public class BoxGame {
 
     public BoxGame(){
         levelGenerator = new LevelGenerator();
-        testLevels = new Levels();
-        //tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
-        tileArray = testLevels.getTestLevel2();
+        testLevels = new TestLevels();
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, true);
+        //tileArray = testLevels.getTestLevel2();
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
-
     public Tile[][] getTileArray(){
         return this.tileArray;
     }
@@ -34,15 +33,15 @@ public class BoxGame {
     public static void main(String[] args) {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
-
         boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
     }
 
+    public void switchLevel(boolean isEmpty){
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, isEmpty);
+    }
+
     private void move(Key key) {
-        Tile playerTile = Levels.getPlayerTile(tileArray);
-
-      
-
+        Tile playerTile = TestLevels.getPlayerTile(tileArray);
         if (key.equals(Key.valueOf("DOWN_ARROW")) &&  playerTile.getIndex2()+1 <  tileArray.length){
             Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()+1];
             playerTile.interact(interactTile, tileArray);
@@ -61,6 +60,9 @@ public class BoxGame {
         }
 
         TileGraphics.showTiles(tileArray, canvas);
+        if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
+            switchLevel(true);
+        }
     }
 
 }

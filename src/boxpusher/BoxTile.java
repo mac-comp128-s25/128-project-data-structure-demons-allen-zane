@@ -24,7 +24,7 @@ public class BoxTile implements Tile{
 
     @Override
     public void interact(Tile otherTile, Tile[][] tileArray) {
-        Tile playerTile = Levels.getPlayerTile(tileArray);
+        Tile playerTile = TestLevels.getPlayerTile(tileArray);
         int indexDist1 = playerTile.getIndex1()-index1;
         int playerIndex1 = playerTile.getIndex1();
         int playerIndex2 = playerTile.getIndex2();

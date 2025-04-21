@@ -14,7 +14,9 @@ public class LevelGenerator {
 
     private List<Integer> notAllowedDir;
     
-    public Tile[][] generate(int lvlSize, int wCount, int mWDistance){
+    private boolean hasWon; //will be checked by boxGame periodically in order to know whether to generate a new level
+    
+    public Tile[][] generate(int lvlSize, int wCount, int mWDistance, boolean isEmpty){
         notAllowedDir = new LinkedList<Integer>(); //setup notAllowedDir
 
         this.levelSize = lvlSize;
@@ -60,18 +62,28 @@ public class LevelGenerator {
         
         boolean[][] walk = genWalk(playerPos, boxPos);
         
-        for (int i = 0; i < walk.length; i++) {
-            for (int j = 0; j < walk.length; j++) {
-                if(walk[i][j] == true){
-                    level[i][j] = new EmptyTile(i, j);
-                } else {
-                    level[i][j] = new WallTile(i, j);
+        if (isEmpty == false){ //isEmpty is used for testing to quickly generate a level full of empty tiles.
+            for (int i = 0; i < walk.length; i++) {
+                for (int j = 0; j < walk.length; j++) {
+                    if(walk[i][j] == true){
+                        level[i][j] = new EmptyTile(i, j);
+                    } else {
+                        level[i][j] = new WallTile(i, j);
+                    }
                 }
             }
-        }
-
-        level[playerPos[0]][playerPos[1]] = new PlayerTile(playerPos[0], playerPos[1]);
+            level[playerPos[0]][playerPos[1]] = new PlayerTile(playerPos[0], playerPos[1]);
+        
         level[boxPos[0]][boxPos[1]] = new BoxTile(boxPos[0], boxPos[1]);
+
+        }
+        else {
+        level[7][7] = new VictoryTile(7, 7);
+
+        level[4][4] = new PlayerTile(4, 4);
+        
+        level[4][5] = new BoxTile(4, 5);
+        }
 
         return level;
     }
@@ -187,5 +199,12 @@ public class LevelGenerator {
         possibleDir.removeAll(notAllowedDir);
         notAllowedDir.clear();
         return possibleDir.get(getRandomNumberInRange(0, possibleDir.size()));
+    }
+
+    public boolean getWinStatus(){
+        return hasWon;
+    }
+    public void setWinStatus(boolean hasWon){
+        this.hasWon = hasWon;
     }
 }
