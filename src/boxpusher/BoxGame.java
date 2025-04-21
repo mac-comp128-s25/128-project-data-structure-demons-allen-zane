@@ -7,8 +7,7 @@ import edu.macalester.graphics.events.Key;
 public class BoxGame {
     private Tile[][] tileArray;
     private CanvasWindow canvas;
-    private LevelGenerator levelGenerator;
-    private TestLevels testLevels;
+    private BetterLevelGenerator levelGenerator;
 
     //for level gen
     private int levelSize = 10;
@@ -16,10 +15,9 @@ public class BoxGame {
     private int minWalkDistance = 1;
 
     public BoxGame(){
-        levelGenerator = new LevelGenerator();
+        levelGenerator = new BetterLevelGenerator();
         testLevels = new TestLevels();
-        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, true);
-        //tileArray = testLevels.getTestLevel2();
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
     public Tile[][] getTileArray(){
@@ -36,8 +34,8 @@ public class BoxGame {
         boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
     }
 
-    public void switchLevel(boolean isEmpty){
-        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, isEmpty);
+    public void switchLevel(){
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
     }
 
     private void move(Key key) {
@@ -61,7 +59,7 @@ public class BoxGame {
 
         TileGraphics.showTiles(tileArray, canvas);
         if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
-            switchLevel(true);
+            switchLevel();
         }
     }
 

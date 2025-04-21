@@ -31,35 +31,36 @@ public class BetterLevelGenerator {
         }
 
         //init player
-        final int[] playerPos = {getRandomNumberInRange(0, levelSize), getRandomNumberInRange(0, levelSize)};
+        final int[] boxPos = {getRandomNumberInRange(1, levelSize-1), getRandomNumberInRange(1, levelSize-1)}; //cannot start at edge
 
-        //put the box adjacent to the player (not out of bounds tho)
-        int[] tempBoxPos = {playerPos[0], playerPos[1]};
+        //put the player adjacent to the box (not out of bounds tho)
+        int[] tempPlayerPos = {boxPos[0], boxPos[1]};
         if (getRandomNumberInRange(0,2) == 0){
-            if (tempBoxPos[0] == levelSize - 1){
-                tempBoxPos[0] = levelSize - 2;
-            } else if (tempBoxPos[0] == 0){
-                tempBoxPos[0] = 1;
+            if (tempPlayerPos[0] == levelSize - 1){
+                tempPlayerPos[0] = levelSize - 2;
+            } else if (tempPlayerPos[0] == 0){
+                tempPlayerPos[0] = 1;
             } else if (getRandomNumberInRange(0,2) == 0){
-                tempBoxPos[0] += 1;
+                tempPlayerPos[0] += 1;
             } else {
-                tempBoxPos[0] -= 1;
+                tempPlayerPos[0] -= 1;
             }
         } else {
-            if (tempBoxPos[1] == levelSize - 1){
-                tempBoxPos[1] = levelSize - 2;
-            } else if (tempBoxPos[1] == 0){
-                tempBoxPos[1] = 1;
+            if (tempPlayerPos[1] == levelSize - 1){
+                tempPlayerPos[1] = levelSize - 2;
+            } else if (tempPlayerPos[1] == 0){
+                tempPlayerPos[1] = 1;
             } else if (getRandomNumberInRange(0,2) == 0){
-                tempBoxPos[1] += 1;
+                tempPlayerPos[1] += 1;
             } else {
-                tempBoxPos[1] -= 1;
+                tempPlayerPos[1] -= 1;
             }
         }
 
-        final int[] boxPos = {tempBoxPos[0], tempBoxPos[1]};
+        final int[] playerPos = {tempPlayerPos[0], tempPlayerPos[1]};
+        int[] endPos = {0,0};
         
-        boolean[][] walk = genWalk(playerPos, boxPos);
+        boolean[][] walk = genWalk(playerPos, boxPos, endPos);
         
         for (int i = 0; i < walk.length; i++) {
             for (int j = 0; j < walk.length; j++) {
@@ -73,12 +74,14 @@ public class BetterLevelGenerator {
 
         level[playerPos[0]][playerPos[1]] = new PlayerTile(playerPos[0], playerPos[1]);
         level[boxPos[0]][boxPos[1]] = new BoxTile(boxPos[0], boxPos[1]);
+        level[endPos[0]][endPos[1]] = new VictoryTile(endPos[0], endPos[1]);
+
 
         return level;
     }
 
     //recursive method that generates a valid walk
-    private boolean[][] genWalk(int[] pPos, int[] bPos){
+    private boolean[][] genWalk(int[] pPos, int[] bPos, int[] ePos){
 
         boolean[][] walk = new boolean[levelSize][levelSize]; //stores the walk if value is true then has been walked on
 
@@ -92,20 +95,24 @@ public class BetterLevelGenerator {
             move(playerPos, boxPos, walk);
         }
 
+        //update victory tile location
+        ePos[0] = boxPos[0];
+        ePos[1] = boxPos[1];
+
         //check that walk traveled more than minWalkDistance (x and y) -> return our walk
         if((Math.abs(playerPos[0] - pPos[0]) + (Math.abs(playerPos[1] - pPos[1]))) > minWalkDistance){
             return walk;
         }
 
         //if not call genWalk again
-        System.out.println("WALK FAILED");
-        return genWalk(pPos, bPos);
+        //System.out.println("WALK FAILED");
+        return genWalk(pPos, bPos, ePos);
     }
 
     //moves the box randomly, then updates
     private void move(int[] pPos, int[] bPos, boolean[][] walk){ 
 
-        System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
+        //System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
 
         //box cannot move out of horizontal bounds + gets stuck on vertical edge
         if(bPos[0] == levelSize - 1 || bPos[0] == 0){
@@ -140,6 +147,7 @@ public class BetterLevelGenerator {
 
         //move box
         int dir = getRandomNewDirection(); //returns one of: 0 = left, 1 = right, 2 = up, 3 = down; 4 = no possible dir
+        //System.out.println("dir: " + dir);
         if(dir == 4){
             //cannot move
         } else if(dir == 0){
@@ -156,8 +164,10 @@ public class BetterLevelGenerator {
             bPos[1] += 1;
         }    
         
-        //TODO: create new walk between players position and new position
-        //from pPosReq to pPos without going through bPosOld
+        //clear the corner tile in box turning situations
+        //pPosReq is where the player must have been to move the box
+        //pPos is the players current position
+        //bPosOld is the old boxes position a.k.a we cannot go through it
 
         walk[pPosReq[0]][pPosReq[1]] = true;
 
@@ -172,9 +182,9 @@ public class BetterLevelGenerator {
 
         } else if(dir == 2 || dir == 3){ //if box moved up or down
             if(pPosReq[1] > pPos[1]){
-                pPos[0]++;
+                pPos[1]++;
             } else{
-                pPos[0]--;
+                pPos[1]--;
             }
 
             walk[pPos[0]][pPos[1]] = true;
@@ -200,7 +210,7 @@ public class BetterLevelGenerator {
 
     //same as getRandomNumberInRange but you cant move backwards
     private int getRandomNewDirection(){
-        System.out.println(notAllowedDir);
+        //System.out.println(notAllowedDir);
 
         List<Integer> possibleDir = new LinkedList<>();
         for (int i = 0; i < 4; i++) {
@@ -209,6 +219,8 @@ public class BetterLevelGenerator {
 
         possibleDir.removeAll(notAllowedDir);
         notAllowedDir.clear();
+
+        //System.out.println("POSSIBLEDIRSIZE " + possibleDir.size());
 
         if(possibleDir.size() == 0){
             return 4;
