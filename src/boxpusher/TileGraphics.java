@@ -21,7 +21,7 @@ public class TileGraphics {
         }
 
         double currentX = 0;
-        double currentY = canvas.getHeight()/3;
+        double currentY = 50 ;
         for (int i = 0; i < tileArray.length; i++){
             if (i != 0){
                 currentY += TILE_SPACING;
