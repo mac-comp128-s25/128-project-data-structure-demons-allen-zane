@@ -16,7 +16,6 @@ public class BoxGame {
 
     public BoxGame(){
         levelGenerator = new BetterLevelGenerator();
-        testLevels = new TestLevels();
         tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
