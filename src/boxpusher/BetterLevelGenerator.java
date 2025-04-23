@@ -192,7 +192,9 @@ public class BetterLevelGenerator {
                 pPos[1]--;
             }
 
-            walk[pPos[0]][pPos[1]] = true;
+            if(pPos[0] >= 0 && pPos[0] < levelSize && pPos[1] >= 0 && pPos[1] < levelSize){ //out of bounds check
+                walk[pPos[0]][pPos[1]] = true;
+            } 
         }
 
 
