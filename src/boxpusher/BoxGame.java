@@ -18,7 +18,7 @@ public class BoxGame {
     private int minWalkDistance = 1;
 
     private final double time = 30;
-    private Double timer = time;
+    private double timer = time;
 
     public BoxGame(){
         levelGenerator = new BetterLevelGenerator();
@@ -47,11 +47,11 @@ public class BoxGame {
         timer +=5;
     }
     public void updateTiles(){
-        GraphicsText timerText = new GraphicsText(timer.toString(), 50, 50);
+        GraphicsText timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds", timer), 50, 50);
         canvas.add(timerText);
         timerText.setFillColor(Color.BLACK);
         canvas.animate((deltaTime)->{
-            timerText.setText(timer.toString());
+            timerText.setText(String.format("%2$,3.2f %1$s", "seconds left", timer));
             timer-=deltaTime;
             if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
                 //canvas.pause(500);
