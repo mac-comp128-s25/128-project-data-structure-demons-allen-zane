@@ -214,6 +214,17 @@ public class BetterLevelGenerator {
         for (int i = 0; i < levelSize; i++){
             levelCopy[i] = Arrays.copyOf(level[i], level[0].length);
         }
+        return resetLevel(levelCopy);
+    }
+
+    public Tile[][] resetLevel(Tile [][] levelCopy){
+        for (int i = 0; i < levelSize; i++){
+            for (int j = 0; j < levelSize; j++){
+                Tile currentTile = levelCopy[i][j];
+                currentTile.setIndex1(i);
+                currentTile.setIndex2(j);
+            }
+        }
         return levelCopy;
     }
 
