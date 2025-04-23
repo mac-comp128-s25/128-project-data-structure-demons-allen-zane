@@ -18,8 +18,8 @@ public class BoxGame {
     private double timer = time;
 
     public BoxGame(){
-        levelGenerator = new BetterLevelGenerator(levelSize, walkCount, minWalkDistance);
-        tileArray = levelGenerator.generate();
+        levelGenerator = new BetterLevelGenerator();
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
     public Tile[][] getTileArray(){
@@ -38,7 +38,7 @@ public class BoxGame {
     }
 
     public void switchLevel(){
-        tileArray = levelGenerator.generate();
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
         timer = time;
     }
 
