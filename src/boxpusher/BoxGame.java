@@ -1,5 +1,8 @@
 package boxpusher;
+import java.awt.Color;
+
 import edu.macalester.graphics.CanvasWindow;
+import edu.macalester.graphics.GraphicsText;
 import edu.macalester.graphics.events.Key;
 /**
  * The main class that handles things like managing the tile array, and player movement
@@ -14,8 +17,8 @@ public class BoxGame {
     private int walkCount = 10;
     private int minWalkDistance = 1;
 
-    private final double time = 10;
-    private double timer = time;
+    private final double time = 30;
+    private Double timer = time;
 
     public BoxGame(){
         levelGenerator = new BetterLevelGenerator();
@@ -34,12 +37,27 @@ public class BoxGame {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
         boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
+<<<<<<< Updated upstream
         
+=======
+        boxGame.updateTiles();
+>>>>>>> Stashed changes
     }
 
     public void switchLevel(){
         tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
         timer = time;
+    }
+    public void updateTiles(){
+        GraphicsText timerText = new GraphicsText(timer.toString(), 50, 50);
+        canvas.add(timerText);
+        timerText.setFillColor(Color.BLACK);
+        canvas.animate((deltaTime)->{
+            TileGraphics.showTiles(tileArray, canvas);
+            timerText.setText(timer.toString());
+            timer-=deltaTime;
+            
+        });
     }
 
     private void move(Key key) {
@@ -47,7 +65,7 @@ public class BoxGame {
         Tile playerTile = TestLevels.getPlayerTile(tileArray);
         if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
             switchLevel();
-
+            
         } else{
 
             if (key.equals(Key.valueOf("R"))){
@@ -71,7 +89,7 @@ public class BoxGame {
             }
         }
 
-        TileGraphics.showTiles(tileArray, canvas);
+        
 
     }
 
