@@ -14,9 +14,12 @@ public class BoxGame {
     private int walkCount = 10;
     private int minWalkDistance = 1;
 
+    private final double time = 10;
+    private double timer = time;
+
     public BoxGame(){
-        levelGenerator = new BetterLevelGenerator();
-        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
+        levelGenerator = new BetterLevelGenerator(levelSize, walkCount, minWalkDistance);
+        tileArray = levelGenerator.generate();
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
     }
     public Tile[][] getTileArray(){
@@ -34,32 +37,41 @@ public class BoxGame {
     }
 
     public void switchLevel(){
-        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
+        tileArray = levelGenerator.generate();
+        timer = time;
     }
 
     private void move(Key key) {
+
         Tile playerTile = TestLevels.getPlayerTile(tileArray);
-        if (key.equals(Key.valueOf("DOWN_ARROW")) &&  playerTile.getIndex2()+1 <  tileArray.length){
-            Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()+1];
-            playerTile.interact(interactTile, tileArray);
-        }
-        if (key.equals(Key.valueOf("LEFT_ARROW")) &&  playerTile.getIndex1()-1 >= 0){
-            Tile interactTile = tileArray[playerTile.getIndex1()-1][playerTile.getIndex2()];
-            playerTile.interact(interactTile, tileArray);
-        }
-        if (key.equals(Key.valueOf("UP_ARROW")) &&  playerTile.getIndex2()-1 >=0){
-            Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()-1];
-            playerTile.interact(interactTile, tileArray);
-        }
-        if (key.equals(Key.valueOf("RIGHT_ARROW")) &&  playerTile.getIndex1()+1 < tileArray[0].length){
-            Tile interactTile = tileArray[playerTile.getIndex1()+1][playerTile.getIndex2()];
-            playerTile.interact(interactTile, tileArray);
+        if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
+            switchLevel();
+
+        } else{
+
+            if (key.equals(Key.valueOf("R"))){
+                tileArray = levelGenerator.getLevel();
+            }
+            if (key.equals(Key.valueOf("DOWN_ARROW")) &&  playerTile.getIndex2()+1 <  tileArray.length){
+                Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()+1];
+                playerTile.interact(interactTile, tileArray);
+            }
+            if (key.equals(Key.valueOf("LEFT_ARROW")) &&  playerTile.getIndex1()-1 >= 0){
+                Tile interactTile = tileArray[playerTile.getIndex1()-1][playerTile.getIndex2()];
+                playerTile.interact(interactTile, tileArray);
+            }
+            if (key.equals(Key.valueOf("UP_ARROW")) &&  playerTile.getIndex2()-1 >=0){
+                Tile interactTile = tileArray[playerTile.getIndex1()][playerTile.getIndex2()-1];
+                playerTile.interact(interactTile, tileArray);
+            }
+            if (key.equals(Key.valueOf("RIGHT_ARROW")) &&  playerTile.getIndex1()+1 < tileArray[0].length){
+                Tile interactTile = tileArray[playerTile.getIndex1()+1][playerTile.getIndex2()];
+                playerTile.interact(interactTile, tileArray);
+            }
         }
 
         TileGraphics.showTiles(tileArray, canvas);
-        if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
-            switchLevel();
-        }
+
     }
 
 }
