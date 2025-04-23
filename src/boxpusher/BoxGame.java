@@ -37,29 +37,27 @@ public class BoxGame {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
         boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        
-=======
+
         boxGame.updateTiles();
->>>>>>> Stashed changes
-=======
-        boxGame.updateTiles();
->>>>>>> Stashed changes
+
     }
 
     public void switchLevel(){
         tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
-        timer = time;
+        timer +=5;
     }
     public void updateTiles(){
         GraphicsText timerText = new GraphicsText(timer.toString(), 50, 50);
         canvas.add(timerText);
         timerText.setFillColor(Color.BLACK);
         canvas.animate((deltaTime)->{
-            TileGraphics.showTiles(tileArray, canvas);
             timerText.setText(timer.toString());
             timer-=deltaTime;
+            if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
+                //canvas.pause(500);
+                switchLevel();
+                TileGraphics.showTiles(tileArray, canvas);
+            }
             
         });
     }
@@ -67,10 +65,8 @@ public class BoxGame {
     private void move(Key key) {
 
         Tile playerTile = TestLevels.getPlayerTile(tileArray);
-        if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
-            switchLevel();
-            
-        } else{
+       
+
 
             if (key.equals(Key.valueOf("R"))){
                 tileArray = levelGenerator.getLevel();
@@ -91,10 +87,11 @@ public class BoxGame {
                 Tile interactTile = tileArray[playerTile.getIndex1()+1][playerTile.getIndex2()];
                 playerTile.interact(interactTile, tileArray);
             }
+            TileGraphics.showTiles(tileArray, canvas);
         }
-
+        
         
 
     }
 
-}
+
