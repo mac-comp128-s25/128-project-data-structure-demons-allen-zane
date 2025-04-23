@@ -34,6 +34,7 @@ public class BoxGame {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
         boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
+        
     }
 
     public void switchLevel(){

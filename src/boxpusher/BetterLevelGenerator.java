@@ -15,17 +15,13 @@ public class BetterLevelGenerator {
 
     private List<Integer> notAllowedDir;
 
-    public BetterLevelGenerator(int lvlSize, int wCount, int mWDistance){
-
+    public Tile[][] generate(int lvlSize, int wCount, int mWDistance){
+        notAllowedDir = new LinkedList<Integer>(); //setup notAllowedDir\\
+        
         this.levelSize = lvlSize;
         this.walkCount = wCount;
         this.minWalkDistance = mWDistance;
         level = new Tile[levelSize][levelSize];
-        
-    }
-
-    public Tile[][] generate(){
-        notAllowedDir = new LinkedList<Integer>(); //setup notAllowedDir
 
         //init 2D array with empty tiles
         for (int i = 0; i < levelSize; i++) {
