@@ -26,13 +26,14 @@ public class VictoryTile implements Tile{
     @Override
     public void interact(Tile otherTile, Tile[][] tileArray) {
         if (otherTile.getSignifier().equals("Box")){
-            tileArray[otherTile.getIndex1()][otherTile.getIndex2()] = new EmptyTile(otherTile.getIndex1(), otherTile.getIndex2());
+            int index1Copy = index1;
+            int index2Copy = index2;
             tileArray[index1][index2] = otherTile;
-            tileArray[0][0] = this;
-            otherTile.setIndex1(0);
-            otherTile.setIndex2(0);
-            otherTile.setIndex1(index1);
-            otherTile.setIndex2(index2);
+            tileArray[otherTile.getIndex1()][otherTile.getIndex2()] = this;
+            setIndex1(otherTile.getIndex1());
+            setIndex2(otherTile.getIndex2());
+            otherTile.setIndex1(index1Copy);
+            otherTile.setIndex2(index2Copy);
             hasWon = true;
         }
     }
