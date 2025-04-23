@@ -38,7 +38,11 @@ public class BoxGame {
         TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
         boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
+=======
+        boxGame.updateTiles();
+>>>>>>> Stashed changes
 =======
         boxGame.updateTiles();
 >>>>>>> Stashed changes
