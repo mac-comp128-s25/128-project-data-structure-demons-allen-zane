@@ -13,22 +13,23 @@ public class BoxGame {
     private BetterLevelGenerator levelGenerator;
 
     //for level gen
-    private int levelSize = 10;
-    private int walkCount = 10;
+    private int levelSize = 5;
+    private int walkCount = 5;
     private int minWalkDistance = 1;
     private boolean canMove;
 
-    private final double time = 5;
+    private final double time = 10;
     private double timer = time;
     private Integer score;
 
     public BoxGame(){
         levelGenerator = new BetterLevelGenerator();
         canMove = true;
-        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, 0);
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
         score = 0;
     }
+
     public Tile[][] getTileArray(){
         return this.tileArray;
     }
@@ -47,9 +48,13 @@ public class BoxGame {
     }
 
     public void switchLevel(){
-        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
+        levelSize++;
+        walkCount += 4;
+        minWalkDistance++;
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, 0);
         timer +=5;
     }
+
     public void updateTiles(){
         GraphicsText timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds left", timer), 50, 50);
         GraphicsText scoreText = new GraphicsText("Score: " + score.toString() + " points", 75, 75);
@@ -107,8 +112,6 @@ public class BoxGame {
             TileGraphics.showTiles(tileArray, canvas);
         }
         }
-        
-
     }
 
 
