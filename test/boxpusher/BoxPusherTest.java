@@ -36,4 +36,11 @@ public class BoxPusherTest {
         Tile victoryTile = TestLevels.getVictoryTile(testLevel2);
         assertEquals("Victory", victoryTile.getSignifier());
     }
+
+    @Test
+    public void generatelevelWithSeed(){
+        BetterLevelGenerator levelGenerator = new BetterLevelGenerator();
+        levelGenerator.generate(5, 5, 1, 1);
+    }
+
 }

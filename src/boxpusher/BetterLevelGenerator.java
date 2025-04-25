@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 public class BetterLevelGenerator {
+
+    private int seed = 0;
     
     private int levelSize;
     private int walkCount;
@@ -15,9 +17,10 @@ public class BetterLevelGenerator {
 
     private List<Integer> notAllowedDir;
 
-    public Tile[][] generate(int lvlSize, int wCount, int mWDistance){
+    public Tile[][] generate(int lvlSize, int wCount, int mWDistance, int seed){
         notAllowedDir = new LinkedList<Integer>(); //setup notAllowedDir\\
         
+        this.seed = seed;
         this.levelSize = lvlSize;
         this.walkCount = wCount;
         this.minWalkDistance = mWDistance;
@@ -110,14 +113,11 @@ public class BetterLevelGenerator {
         }
 
         //if not call genWalk again
-        System.out.println("WALK FAILED");
         return genWalk(pPos, bPos, ePos);
     }
 
     //moves the box randomly, then updates
     private void move(int[] pPos, int[] bPos, boolean[][] walk){ 
-
-        System.out.println("player Pos: " + pPos[0] + ", " + pPos[1] + " box Pos: " + bPos[0] + ", " + bPos[1]);
 
         //box cannot move out of horizontal bounds + gets stuck on vertical edge
         if(bPos[0] == levelSize - 1 || bPos[0] == 0){
@@ -152,7 +152,6 @@ public class BetterLevelGenerator {
 
         //move box
         int dir = getRandomNewDirection(); //returns one of: 0 = left, 1 = right, 2 = up, 3 = down; 4 = no possible dir
-        System.out.println("dir: " + dir);
         if(dir == 4){
             //cannot move
         } else if(dir == 0){
@@ -183,7 +182,9 @@ public class BetterLevelGenerator {
                 pPos[0]--;
             }
 
-            walk[pPos[0]][pPos[1]] = true;
+            if(pPos[0] >= 0 && pPos[0] < levelSize && pPos[1] >= 0 && pPos[1] < levelSize){ //out of bounds check
+                walk[pPos[0]][pPos[1]] = true;
+            } 
 
         } else if(dir == 2 || dir == 3){ //if box moved up or down
             if(pPosReq[1] > pPos[1]){
@@ -206,7 +207,15 @@ public class BetterLevelGenerator {
 
     //min is inclusive, max is not, for example gRNIR(3,12) can return 3 but not 12
     private int getRandomNumberInRange(int min, int max){ 
-        Random random = new Random();
+        Random random;
+
+        if(seed != 0){
+            random = new Random(seed);
+        } else {
+            random = new Random();
+            System.out.println();
+        }
+        
         int randomNumber = random.nextInt(max - min) + min;
         return randomNumber;
     }
@@ -232,8 +241,6 @@ public class BetterLevelGenerator {
 
     //same as getRandomNumberInRange but you cant move backwards
     private int getRandomNewDirection(){
-        System.out.println(notAllowedDir);
-
         List<Integer> possibleDir = new LinkedList<>();
         for (int i = 0; i < 4; i++) {
             possibleDir.add(i);
@@ -241,8 +248,6 @@ public class BetterLevelGenerator {
 
         possibleDir.removeAll(notAllowedDir);
         notAllowedDir.clear();
-
-        System.out.println("POSSIBLEDIRSIZE " + possibleDir.size());
 
         if(possibleDir.size() == 0){
             return 4;
