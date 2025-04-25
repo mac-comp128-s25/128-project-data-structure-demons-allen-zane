@@ -16,14 +16,18 @@ public class BoxGame {
     private int levelSize = 10;
     private int walkCount = 10;
     private int minWalkDistance = 1;
+    private boolean canMove;
 
-    private final double time = 30;
+    private final double time = 5;
     private double timer = time;
+    private Integer score;
 
     public BoxGame(){
         levelGenerator = new BetterLevelGenerator();
+        canMove = true;
         tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance);
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
+        score = 0;
     }
     public Tile[][] getTileArray(){
         return this.tileArray;
@@ -47,27 +51,40 @@ public class BoxGame {
         timer +=5;
     }
     public void updateTiles(){
-        GraphicsText timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds", timer), 50, 50);
+        GraphicsText timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds left", timer), 50, 50);
+        GraphicsText scoreText = new GraphicsText("Score: " + score.toString() + " points", 75, 75);
+        scoreText.setFillColor(Color.BLACK);
         canvas.add(timerText);
+        canvas.add(scoreText);
         timerText.setFillColor(Color.BLACK);
         canvas.animate((deltaTime)->{
             timerText.setText(String.format("%2$,3.2f %1$s", "seconds left", timer));
+            scoreText.setText("Score: " + score.toString() + " points");
             timer-=deltaTime;
+            if (timer <= 0 && canMove){
+                canvas.removeAll();
+                GraphicsText gameOverText = new GraphicsText("Game Over!");
+                
+                gameOverText.setFillColor(Color.RED);
+                gameOverText.setFontSize(50);
+                gameOverText.setCenter(canvas.getWidth()/2, canvas.getHeight()/2);
+                canvas.add(gameOverText);
+                scoreText.setCenter(canvas.getWidth()/2, gameOverText.getY()+50);
+                canvas.add(scoreText);
+                canMove = false;
+            }
             if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
-                //canvas.pause(500);
                 switchLevel();
+                score++;
                 TileGraphics.showTiles(tileArray, canvas);
             }
-            
+        
         });
     }
 
     private void move(Key key) {
-
-        Tile playerTile = TestLevels.getPlayerTile(tileArray);
-       
-
-
+        if (canMove){
+            Tile playerTile = TestLevels.getPlayerTile(tileArray);
             if (key.equals(Key.valueOf("R"))){
                 tileArray = levelGenerator.getLevel();
             }
@@ -89,7 +106,7 @@ public class BoxGame {
             }
             TileGraphics.showTiles(tileArray, canvas);
         }
-        
+        }
         
 
     }
