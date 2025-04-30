@@ -4,6 +4,7 @@ import java.awt.Color;
 import edu.macalester.graphics.CanvasWindow;
 import edu.macalester.graphics.GraphicsText;
 import edu.macalester.graphics.events.Key;
+import edu.macalester.graphics.ui.Button;
 /**
  * The main class that handles things like managing the tile array, and player movement
  */
@@ -16,18 +17,26 @@ public class BoxGame {
     private int levelSize = 5;
     private int walkCount = 5;
     private int minWalkDistance = 1;
+    private int incrementSizeOrNot;
     private boolean canMove;
 
-    private final double time = 10;
-    private double timer = time;
+    private final double TIME = 3;
+    private double timer = TIME;
+    private double timeToAdd = 5;
     private Integer score;
+    boolean doTheCanvasAnimateCallYesOrNo = true;
+    private GraphicsText timerText;
+    private GraphicsText scoreText;
 
     public BoxGame(){
         levelGenerator = new BetterLevelGenerator();
-        canMove = true;
+        incrementSizeOrNot = 0;
+        canMove = false;
         tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, 0);
         canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
         score = 0;
+        timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds left", timer), 50, 50);
+        scoreText = new GraphicsText("Score: " + score.toString() + " points", 75, 75);
     }
 
     public Tile[][] getTileArray(){
@@ -40,51 +49,77 @@ public class BoxGame {
 
     public static void main(String[] args) {
         BoxGame boxGame = new BoxGame();
-        TileGraphics.showTiles(boxGame.getTileArray(), boxGame.getCanvas());
-        boxGame.getCanvas().onKeyDown(event -> boxGame.move(event.getKey()));
-
-        boxGame.updateTiles();
-
+        TileGraphics.showTitle(boxGame.getCanvas(), boxGame);
+    }
+    public void init(){
+        canMove=true;
+        canvas.removeAll();
+        TileGraphics.showTiles(tileArray, canvas);
+        canvas.onKeyDown(event -> move(event.getKey()));
+        if (doTheCanvasAnimateCallYesOrNo ==true){
+        }
+        timer = TIME;
+        updateTiles();
     }
 
     public void switchLevel(){
-        levelSize++;
+        incrementSizeOrNot++;
+        if (incrementSizeOrNot%3 == 0){
+            levelSize++;
+            minWalkDistance++;
+            timeToAdd-=.5;
+        }
         walkCount += 4;
-        minWalkDistance++;
         tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, 0);
-        timer +=5;
+        timer +=timeToAdd;
+    }
+    public GraphicsText getTimerText(){
+        return timerText;
+    }
+    public GraphicsText getScoreText(){
+        return scoreText;
     }
 
     public void updateTiles(){
-        GraphicsText timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds left", timer), 50, 50);
-        GraphicsText scoreText = new GraphicsText("Score: " + score.toString() + " points", 75, 75);
+        scoreText = getScoreText();
+        timerText = getTimerText();
         scoreText.setFillColor(Color.BLACK);
+        scoreText.setPosition(75,75);
+        timerText.setFillColor(Color.BLACK);
         canvas.add(timerText);
         canvas.add(scoreText);
-        timerText.setFillColor(Color.BLACK);
-        canvas.animate((deltaTime)->{
-            timerText.setText(String.format("%2$,3.2f %1$s", "seconds left", timer));
-            scoreText.setText("Score: " + score.toString() + " points");
-            timer-=deltaTime;
-            if (timer <= 0 && canMove){
-                canvas.removeAll();
-                GraphicsText gameOverText = new GraphicsText("Game Over!");
-                
-                gameOverText.setFillColor(Color.RED);
-                gameOverText.setFontSize(50);
-                gameOverText.setCenter(canvas.getWidth()/2, canvas.getHeight()/2);
-                canvas.add(gameOverText);
-                scoreText.setCenter(canvas.getWidth()/2, gameOverText.getY()+50);
-                canvas.add(scoreText);
-                canMove = false;
-            }
-            if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
-                switchLevel();
-                score++;
-                TileGraphics.showTiles(tileArray, canvas);
-            }
-        
-        });
+        if (doTheCanvasAnimateCallYesOrNo ==true){
+            doTheCanvasAnimateCallYesOrNo = false;
+            canvas.animate((deltaTime)->{
+                timerText.setText(String.format("%2$,3.2f %1$s", "seconds left", timer));
+                scoreText.setText("Score: " + score.toString() + " points");
+                timer-=deltaTime;
+                if (timer <= 0 && canMove){
+                    canvas.removeAll();
+                    TileGraphics.removeCanvasObjects();
+                    GraphicsText gameOverText = new GraphicsText("Game Over!");
+                    
+                    gameOverText.setFillColor(Color.RED);
+                    gameOverText.setFontSize(50);
+                    gameOverText.setCenter(canvas.getWidth()/2, canvas.getHeight()/2);
+                    canvas.add(gameOverText);
+                    scoreText.setCenter(canvas.getWidth()/2, gameOverText.getY()+50);
+                    canvas.add(scoreText);
+                    canMove = false;
+
+                    Button startButton = new Button("Restart");
+                    canvas.add(startButton);
+                    startButton.setCenter(canvas.getWidth()/2, scoreText.getY()+50);
+                    startButton.onClick(() -> init());
+                }
+                if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
+                    switchLevel();
+                    score++;
+                    TileGraphics.showTiles(tileArray, canvas);
+                }
+            
+            });
+    }
     }
 
     private void move(Key key) {
