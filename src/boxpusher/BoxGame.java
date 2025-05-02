@@ -20,7 +20,7 @@ public class BoxGame {
     private int incrementSizeOrNot;
     private boolean canMove;
 
-    private final double TIME = 3;
+    private final double TIME = 5;
     private double timer = TIME;
     private double timeToAdd = 5;
     private Integer score;
@@ -51,12 +51,13 @@ public class BoxGame {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTitle(boxGame.getCanvas(), boxGame);
     }
+
     public void init(){
-        canMove=true;
+        canMove = true;
         canvas.removeAll();
         TileGraphics.showTiles(tileArray, canvas);
-        canvas.onKeyDown(event -> move(event.getKey()));
-        if (doTheCanvasAnimateCallYesOrNo ==true){
+        if (doTheCanvasAnimateCallYesOrNo == true){
+            canvas.onKeyDown(event -> move(event.getKey()));
         }
         timer = TIME;
         updateTiles();
@@ -88,7 +89,7 @@ public class BoxGame {
         timerText.setFillColor(Color.BLACK);
         canvas.add(timerText);
         canvas.add(scoreText);
-        if (doTheCanvasAnimateCallYesOrNo ==true){
+        if (doTheCanvasAnimateCallYesOrNo == true){
             doTheCanvasAnimateCallYesOrNo = false;
             canvas.animate((deltaTime)->{
                 timerText.setText(String.format("%2$,3.2f %1$s", "seconds left", timer));
