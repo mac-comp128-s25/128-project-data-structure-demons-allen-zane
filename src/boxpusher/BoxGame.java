@@ -36,8 +36,8 @@ public class BoxGame {
         canMove = false;
         canvas = new CanvasWindow("Box Pusher!", canvasSize, canvasSize);
         score = 0;
-        timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds left", timer), 50, 50);
-        scoreText = new GraphicsText("Score: " + score.toString() + " points", 75, 75);
+        timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds left", timer), 25, 50);
+        scoreText = new GraphicsText("Score: " + score.toString() + " points", 25, 75);
     }
 
     public Tile[][] getTileArray(){
@@ -70,27 +70,20 @@ public class BoxGame {
         if (incrementSizeOrNot%3 == 0){
             levelSize++;
             minWalkDistance++;
-            timeToAdd-=.5;
         }
         walkCount += 4;
         tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, 0);
         timer +=timeToAdd;
     }
 
-    public GraphicsText getTimerText(){
-        return timerText;
-    }
-
-    public GraphicsText getScoreText(){
-        return scoreText;
-    }
 
     public void updateTiles(){
-        scoreText = getScoreText();
-        timerText = getTimerText();
         scoreText.setFillColor(Color.BLACK);
-        scoreText.setPosition(75,75);
+        scoreText.setFontSize(25);
+        scoreText.setCenter((canvas.getWidth()/5)*2,25);
         timerText.setFillColor(Color.BLACK);
+        timerText.setCenter((canvas.getWidth()/5)*3,27);
+        timerText.setFontSize(25);
         canvas.add(timerText);
         canvas.add(scoreText);
         if (doTheCanvasAnimateCallYesOrNo == true){

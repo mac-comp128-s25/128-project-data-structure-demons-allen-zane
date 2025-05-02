@@ -20,7 +20,7 @@ public class TileGraphics {
     private static Queue<Rectangle> canvasObjects = new ArrayDeque<Rectangle>();
     
     public static void showTitle(CanvasWindow canvas, BoxGame boxGame){
-        GraphicsText titleText = new GraphicsText("Box Pusher!");
+        GraphicsText titleText = new GraphicsText("Infinite Box Pusher");
                 
         titleText.setFillColor(Color.RED);
         titleText.setFontSize(50);
