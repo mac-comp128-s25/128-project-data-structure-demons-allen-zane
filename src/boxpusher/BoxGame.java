@@ -20,7 +20,7 @@ public class BoxGame {
     private int incrementSizeOrNot;
     private boolean canMove;
 
-    private final double TIME = 5;
+    private final double TIME = 10;
     private double timer = TIME;
     private double timeToAdd = 5;
     private Integer score;
@@ -28,12 +28,13 @@ public class BoxGame {
     private GraphicsText timerText;
     private GraphicsText scoreText;
 
+    private final int canvasSize = 1000;
+
     public BoxGame(){
         levelGenerator = new BetterLevelGenerator();
         incrementSizeOrNot = 0;
         canMove = false;
-        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, 0);
-        canvas = new CanvasWindow("Box Pusher!", 1000, 1500);
+        canvas = new CanvasWindow("Box Pusher!", canvasSize, canvasSize);
         score = 0;
         timerText = new GraphicsText(String.format("%2$,3.2f %1$s", "seconds left", timer), 50, 50);
         scoreText = new GraphicsText("Score: " + score.toString() + " points", 75, 75);
@@ -55,7 +56,8 @@ public class BoxGame {
     public void init(){
         canMove = true;
         canvas.removeAll();
-        TileGraphics.showTiles(tileArray, canvas);
+        tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, 0);
+        TileGraphics.showTiles(tileArray, canvas, levelSize, canvasSize);
         if (doTheCanvasAnimateCallYesOrNo == true){
             canvas.onKeyDown(event -> move(event.getKey()));
         }
@@ -74,9 +76,11 @@ public class BoxGame {
         tileArray = levelGenerator.generate(levelSize, walkCount, minWalkDistance, 0);
         timer +=timeToAdd;
     }
+
     public GraphicsText getTimerText(){
         return timerText;
     }
+
     public GraphicsText getScoreText(){
         return scoreText;
     }
@@ -116,7 +120,7 @@ public class BoxGame {
                 if (TestLevels.getVictoryTile(tileArray).getWinStatus()){
                     switchLevel();
                     score++;
-                    TileGraphics.showTiles(tileArray, canvas);
+                    TileGraphics.showTiles(tileArray, canvas, levelSize, canvasSize);
                 }
             
             });
@@ -145,7 +149,7 @@ public class BoxGame {
                 Tile interactTile = tileArray[playerTile.getIndex1()+1][playerTile.getIndex2()];
                 playerTile.interact(interactTile, tileArray);
             }
-            TileGraphics.showTiles(tileArray, canvas);
+            TileGraphics.showTiles(tileArray, canvas, levelSize, canvasSize);
         }
         }
     }

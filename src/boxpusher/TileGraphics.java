@@ -11,8 +11,11 @@ import edu.macalester.graphics.Rectangle;
 import edu.macalester.graphics.ui.Button;
 
 public class TileGraphics {
-    private static final double TILE_SPACING = 70;
+    private static final double TILE_SPACING = 50;
     private static final double TILE_SIZE = 50;
+
+    private static double tileSpacing = TILE_SPACING;
+    private static double tileSize = TILE_SIZE;
 
     private static Queue<Rectangle> canvasObjects = new ArrayDeque<Rectangle>();
     
@@ -28,6 +31,7 @@ public class TileGraphics {
         startButton.setCenter(canvas.getWidth()/2, titleText.getY()+50);
         startButton.onClick(() -> boxGame.init());
     }
+
     public static void removeCanvasObjects(){
         if (!canvasObjects.isEmpty()){
             while(!canvasObjects.isEmpty()){
@@ -35,8 +39,11 @@ public class TileGraphics {
             }
         }
     }
-    public static void showTiles(Tile[][] tileArray, CanvasWindow canvas){
-        
+
+    public static void showTiles(Tile[][] tileArray, CanvasWindow canvas, int levelSize, int canvasSize){
+        tileSpacing = (canvasSize/1.5) / levelSize;
+        tileSize = tileSpacing;
+
         if (!canvasObjects.isEmpty()){
             while(!canvasObjects.isEmpty()){
                 canvas.remove(canvasObjects.remove());
@@ -47,16 +54,16 @@ public class TileGraphics {
         double currentY = 50 ;
         for (int i = 0; i < tileArray.length; i++){
             if (i != 0){
-                currentY += TILE_SPACING;
+                currentY += tileSpacing;
             }
             currentX = canvas.getWidth()/5;
-            for (int j = 0; j < tileArray[i].length; j++){
+            for(int j = 0; j < tileArray[i].length; j++){
                 Tile currentTile = tileArray[j][i];
-                Rectangle currentRectangle = new Rectangle(currentX, currentY, TILE_SIZE, TILE_SIZE);
+                Rectangle currentRectangle = new Rectangle(currentX, currentY, tileSize, tileSpacing);
                 currentRectangle.setFillColor(currentTile.getColor());
                 canvas.add(currentRectangle);
                 canvasObjects.add(currentRectangle);
-                currentX+= TILE_SPACING;
+                currentX+= tileSpacing;
             }
         }
     }
