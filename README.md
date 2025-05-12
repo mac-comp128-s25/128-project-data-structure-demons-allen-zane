@@ -1,4 +1,4 @@
-# Project Title Goes Here
+# Infinite Box Pusher
 
 Made by the Data Structure Demons (Zane Pederson and Allen Long)
 
