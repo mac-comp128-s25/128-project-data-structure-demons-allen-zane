@@ -23,7 +23,7 @@ public class WallTile implements Tile {
 
     @Override
     public void interact(Tile otherTile, Tile[][] tileArray) {
-        //hi
+        //having nothing here is what allows the walls to function, because other tiles can't interact with them and thus stay still
     }
 
     @Override

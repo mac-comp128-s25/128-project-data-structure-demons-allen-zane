@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
- * Stores all the arrays for levels in the game, so the BoxGame class can copy them as needed. 
+ * Helper class used to store all the levels for unit tests, as well as providing assistance with finding tiles. 
  */
 public class TestLevels {
     private final Tile[][] testLevel1;
@@ -35,6 +35,10 @@ public class TestLevels {
         }
         return arrayCopy;
     }
+    /**
+     * Traverses through the tileArray to find the player tile.
+     * @return the player tile.
+     */
     public static Tile getPlayerTile(Tile[][] tileArray){
         for (int i = 0; i < tileArray.length; i++){
             for (int j = 0; j < tileArray[0].length; j++ ){
@@ -44,9 +48,14 @@ public class TestLevels {
 
             }
         }
-        return null; //THIS SHOULD NEVER RETURN NULL
+        return null; //THIS SHOULD NEVER RETURN NULL, BUT THIS HAS TO BE HERE ANYWAY
     }
 
+        /**
+         * Traverses through the tileArray to find the Victory (AKA "Goal") tile.
+         * @param tileArray The array to traverse.
+         * @return The Victory tile.
+         */
         public static VictoryTile getVictoryTile(Tile[][] tileArray){
             for (int i = 0; i < tileArray.length; i++){
                 for (int j = 0; j < tileArray[0].length; j++ ){
@@ -56,7 +65,7 @@ public class TestLevels {
     
                 }
             }
-            return null; //THIS SHOULD NEVER RETURN NULL
+            return null; //THIS SHOULD NEVER RETURN NULL, BUT THIS HAS TO BE HERE ANYWAY
     }
 
       

@@ -52,7 +52,9 @@ public class BoxGame {
         BoxGame boxGame = new BoxGame();
         TileGraphics.showTitle(boxGame.getCanvas(), boxGame);
     }
-
+    /**
+     * Initializes the game. This includes drawing the first level, drawing UI elements, allowing the player to move, and starting the timer.
+     */
     public void init(){
         canMove = true;
         canvas.removeAll();
@@ -64,7 +66,9 @@ public class BoxGame {
         timer = TIME;
         updateTiles();
     }
-
+    /**
+     * Generates a new level, and switches to it.
+     */
     public void switchLevel(){
         incrementSizeOrNot++;
         if (incrementSizeOrNot%3 == 0){
@@ -76,7 +80,9 @@ public class BoxGame {
         timer +=timeToAdd;
     }
 
-
+    /**
+     * Updates the tiles due to movement.
+     */
     public void updateTiles(){
         scoreText.setFillColor(Color.BLACK);
         scoreText.setFontSize(25);
@@ -119,7 +125,12 @@ public class BoxGame {
             });
     }
     }
+    
 
+    /**
+     * Allows the player to move the player tile.
+     * @param key the key pressed, so the function knows which direction to move in.
+     */
     private void move(Key key) {
         if (canMove){
             Tile playerTile = TestLevels.getPlayerTile(tileArray);

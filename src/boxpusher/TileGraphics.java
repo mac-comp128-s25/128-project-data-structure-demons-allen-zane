@@ -19,6 +19,9 @@ public class TileGraphics {
 
     private static Queue<Rectangle> canvasObjects = new ArrayDeque<Rectangle>();
     
+    /**
+     * Draws the Title Screen on the canvas.
+     */
     public static void showTitle(CanvasWindow canvas, BoxGame boxGame){
         GraphicsText titleText = new GraphicsText("Infinite Box Pusher");
                 
@@ -32,6 +35,10 @@ public class TileGraphics {
         startButton.onClick(() -> boxGame.init());
     }
 
+    /**
+     * Removes all tiles from the canvas without removing UI elements.
+     */
+
     public static void removeCanvasObjects(){
         if (!canvasObjects.isEmpty()){
             while(!canvasObjects.isEmpty()){
@@ -40,6 +47,13 @@ public class TileGraphics {
         }
     }
 
+    /**
+     * Draws all the tiles on the canvas.
+     * @param tileArray The array of tiles to graphically represent
+     * @param canvas The canvas to draw the tiles on
+     * @param levelSize The size of level to generate. This helps the method automatically shrink the tiles when the level gets bigger.
+     * @param canvasSize The size of the canvas.
+     */
     public static void showTiles(Tile[][] tileArray, CanvasWindow canvas, int levelSize, int canvasSize){
         tileSpacing = (canvasSize/1.5) / levelSize;
         tileSize = tileSpacing;

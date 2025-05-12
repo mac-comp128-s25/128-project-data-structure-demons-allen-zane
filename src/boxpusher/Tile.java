@@ -13,7 +13,7 @@ public interface Tile {
     
 
     /** 
-     * Behavior for what to do when something tries to interact, or move through, this tile.
+     * Behavior for what to do when something tries to interact with, or move through, this tile.
      * @param otherTile The tile that is trying to interact with this one.
      * @param tileArray The array of tiles to modify.
      */
